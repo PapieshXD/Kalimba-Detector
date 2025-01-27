@@ -44,10 +44,10 @@ label_plik=ctk.CTkLabel(ramka1, text="Brak załącznika", font=(czcionka, 15))
 label_plik.grid(row=2, column=0, columnspan=2, sticky="", padx=10, pady=5)
 
 #Konsola w GUI
-ctk.CTkLabel(gui, text="Konsola", font=(czcionka, 22)).grid(row=3, column=0, columnspan=2, sticky="", padx=10, pady=(20,0))
-text_logs = ctk.CTkTextbox(gui, height=200, width=600, corner_radius=30,
+ctk.CTkLabel(gui, text="Konsola", font=(czcionka, 22)).grid(row=4, column=0, columnspan=2, sticky="", padx=10)
+text_logs = ctk.CTkTextbox(gui, height=150, width=600, corner_radius=30,
           fg_color="#272727", text_color="snow", border_width=1, border_color="dimgrey", font=(czcionka, 12))
-text_logs.grid(row=4, column=0, padx=20, pady=(0,20), sticky="ew")
+text_logs.grid(row=5, column=0, padx=20, pady=(0,20), sticky="ew")
 text_logs.configure(state="disabled")
 
 
@@ -137,7 +137,7 @@ def analyze_audio(wyniki):
                      f"Najbliższy dźwięk: {closest_note} ({note_freq:.2f} Hz)"
             )
             # Dodanie slidera
-            slider = ctk.CTkSlider(ramka2, from_=0, to=1400, orientation="horizontal", width=800, corner_radius=30,
+            slider = ctk.CTkSlider(ramka2, from_=0, to=1400, orientation="horizontal", width=1500, corner_radius=30,
                                    height=25,
                                    state="disabled", button_color='dimgrey', border_width=2, border_color="dimgrey")
             slider.set(dominant_frequency)  # Ustawienie początkowej wartości na dominant_frequency
@@ -236,11 +236,12 @@ def open_new_window():
 
     # Tworzymy wykres Matplotlib
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(positive_frequencies, positive_magnitudes, label=f'Najwyższa częstotliwość')
-    ax.set_title(f"FFT dźwięku {closest_note}")
-    ax.set_xlabel("Częstotliwość [Hz]")
-    ax.set_ylabel("Amplituda")
-    ax.legend()
+    ax.stem(positive_frequencies, positive_magnitudes, linefmt='C0-', markerfmt='C0o', basefmt='k-')
+    ax.set_title(f"FFT dźwięku {closest_note}", fontsize=14)
+    ax.set_xlabel("Częstotliwość [Hz]", fontsize=12)
+    ax.set_xlim(0, 1500)  # Możesz zmienić zakres częstotliwości w zależności od potrzeb
+    ax.set_ylabel("Amplituda", fontsize=12)
+    ax.grid(True, linestyle='--', alpha=0.6)
 
     # Umieszczamy wykres w oknie za pomocą FigureCanvasTkAgg
     canvas = FigureCanvasTkAgg(fig, master=new_window)
@@ -253,6 +254,7 @@ def open_new_window():
 
 
 
+
 #GUI ciąg dalszy
 tytul = (ctk.CTkLabel(gui, text="‧ ⋆⭒༺✩༻⭒⋆ ‧\nANALIZA DŹWIĘKÓW KALIMBY\n• *₊°‧✩˚༺🤍༻˚✩‧°₊ * •", font=(czcionka, 25))).grid(row=0, column=0, sticky="", padx=10, pady=10)
 
@@ -261,9 +263,7 @@ wyniki1=ctk.CTkLabel(ramka1, text=(" "), font=(czcionka, 18))
 wyniki1.grid(row=3, column=0, columnspan=2,sticky="", padx=10, pady=(0,20))
 
 ctk.CTkLabel(ramka1, text="Analiza z pliku audio", font=(czcionka, 22)).grid(row=0, column=0, columnspan=2, sticky="", padx=10, pady=(20,5))
-ctk.CTkButton(ramka1, text='Wgraj plik', font=(czcionka, 18), command=load_audio_file, width=500, height=40, corner_radius=30,
-          fg_color="#353535", text_color="snow", border_width=2, border_color="dimgrey", hover_color='darkslategrey').grid(row=1, column=0, padx=20,
-                                                                                               pady=10, sticky="")
+ctk.CTkButton(ramka1, text='Wgraj plik', font=(czcionka, 18), command=load_audio_file, width=500, height=40, corner_radius=30, fg_color="#353535", text_color="snow", border_width=2, border_color="dimgrey", hover_color='darkslategrey').grid(row=1, column=0, padx=20, pady=10, sticky="")
 ctk.CTkButton(ramka1, text='Analizuj', font=(czcionka, 18), command=(lambda: analyze_audio(wyniki1)), width=500, height=40, corner_radius=30,
           fg_color="#353535", text_color="snow", border_width=2, border_color="dimgrey", hover_color='darkslategrey').grid(row=1, column=1, padx=20,
                                                                                                pady=10, sticky="")
@@ -283,9 +283,13 @@ ctk.CTkButton(ramka2, text='Start', font=(czcionka, 18), command=start_live_soun
                                                                                                pady=10, sticky="e")
 ctk.CTkButton(ramka2, text='Stop', font=(czcionka, 18), command=stop_live_sound_recognition, width=200, height=40, corner_radius=30,
           fg_color="#5b3d36", text_color="snow", border_width=2, border_color="dimgrey",hover_color='#3a2622').grid(row=1, column=1, padx=20,
-                                                                                               pady=10, sticky="w")
-button_open_window = ctk.CTkButton(gui, text="Wyświetl wykresy", command=open_new_window)
-button_open_window.grid(row=5, column=0, pady=20)
+                                                                                  pady=10, sticky="w")
+button_open_window = ctk.CTkButton(gui, text="Wyświetl wykresy", command=open_new_window, font=(czcionka, 18), width=500, height=40, corner_radius=30,
+                                   fg_color="#353535", text_color="snow", border_width=2, border_color="dimgrey", hover_color='darkslategrey')
+ctk.CTkButton(gui, text='Wyświetl wykresy', font=(czcionka, 18), command=open_new_window(), width=500, height=40, corner_radius=30, fg_color="#353535", text_color="snow", border_width=2, border_color="dimgrey", hover_color='darkslategrey')
+button_open_window.grid(row=3, column=0, sticky = '')
+
+
 
 wyniki2=ctk.CTkLabel(ramka2, text=(""), font=(czcionka, 18))
 wyniki2.grid(row=3, column=0, columnspan=2,sticky="", padx=10, pady=(0,20))
